@@ -38,13 +38,32 @@ void Game::handleEvents() {
         player->handleInput(currentKeyStates);
     }
 }
-void Game::update() {
-    // Update Player
-    if (player) player->update();
 
-    // Update NPC
-    if (testEnemy && player) {
-        testEnemy->update(player);
+
+bool checkCollision(SDL_Rect a, SDL_Rect b) {
+    return SDL_HasIntersection(&a, &b);
+}
+
+void Game::update() {
+    if (player) player->update();
+    if (testEnemy && player) testEnemy->update(player);
+
+    // --- COLLISION RESOLUTION ---
+
+    // 1. Did Player hit Enemy?
+    if (player && testEnemy && player->state == ATTACK) {
+        if (checkCollision(player->getAttackBox(), testEnemy->getBounds())) {
+            // Only apply damage once per attack?
+            // (Simplification: For now it drains HP fast if overlapping. We can fix later.)
+            testEnemy->takeDamage(1);
+        }
+    }
+
+    // 2. Did Enemy Die?
+    if (testEnemy && testEnemy->isDead()) {
+        std::cout << "Enemy Defeated!" << std::endl;
+        delete testEnemy;
+        testEnemy = nullptr; // Remove from game
     }
 }
 
@@ -65,6 +84,7 @@ void Game::render() {
     // this line capsm framerate roughly around 60FPS (16ms per frame)
     SDL_Delay(16);
 }
+
 void Game::clean() {
     delete testEnemy;
     delete globalBrain;
