@@ -21,7 +21,7 @@ void Game::init(const char* title, int width, int height) {
 
     // 1. LOAD THE BRAIN
     // globalBrain = new AICore("../assets/model.pt");
-    globalBrain = new AICore("../assets/smart_model.pt");
+    globalBrain = new AICore("../assets/hunter_model.pt");
     // 2. SPAWN NPC (Pass the brain)
     testEnemy = new NPC(100.0f, 100.0f, 50, 50, globalBrain);
 }
@@ -39,8 +39,13 @@ void Game::handleEvents() {
     }
 }
 void Game::update() {
+    // Get Mouse State
+    int mouseX, mouseY;
+    SDL_GetMouseState(&mouseX, &mouseY);
+
+    // Pass Mouse X to the NPC
     if (testEnemy) {
-        testEnemy->update();
+        testEnemy->update((float)mouseX);
     }
 }
 

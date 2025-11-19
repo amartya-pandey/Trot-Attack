@@ -11,8 +11,8 @@ public:
     NPC(float x, float y, int w, int h, AICore* brain);
 
     // Override update to add behavior
-    void update() override;
-
+    // void update() override;
+    void update(float targetX);
     // We can keep the base render() (black square) or override it later
 
 private:
