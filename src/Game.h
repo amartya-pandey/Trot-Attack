@@ -7,6 +7,7 @@
 #include <iostream>
 #include "NPC.h"
 #include "AICore.h"
+#include "Player.h"
 
 class Game {
 public:
@@ -29,4 +30,5 @@ private:
     SDL_Renderer* renderer;
     NPC* testEnemy;
     AICore* globalBrain;
+    Player* player;
 };

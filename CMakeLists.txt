@@ -20,6 +20,8 @@ add_executable(gaven src/main.cpp
         src/NPC.h
         src/AICore.cpp
         src/AICore.h
+        src/Player.cpp
+        src/Player.h
 )
 
 # link libraries

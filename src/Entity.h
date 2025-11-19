@@ -5,22 +5,23 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-
 class Entity {
 public:
-    // Constructor: Sets start position (x, y) and size (w, h)
     Entity(float x, float y, int w, int h);
     virtual ~Entity() {}
 
-    // Virtual methods: Children (like NPC) can override these
+    // Update now takes a placeholder for deltaTime (we'll use fixed steps for now)
     virtual void update();
     virtual void render(SDL_Renderer* renderer);
 
-    // Getters for Position (needed for AI inputs later)
-    float getX() const { return x; }
-    float getY() const { return y; }
+    // Physics Properties
+    float x, y;
+    float velX, velY;
+    int width, height;
+
+    bool onGround; // Is it touching the floor?
 
 protected:
-    float x, y;
-    int width, height;
+    // Color (for rendering simple boxes)
+    int r, g, b;
 };

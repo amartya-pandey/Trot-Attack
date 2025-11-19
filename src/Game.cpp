@@ -18,34 +18,33 @@ void Game::init(const char* title, int width, int height) {
     } else {
         isRunning = false;
     }
-
+    // Spawn player at x=100, y=0 (Let them fall to the ground)
+    player = new Player(100, 0);
     // 1. LOAD THE BRAIN
     // globalBrain = new AICore("../assets/model.pt");
-    globalBrain = new AICore("../assets/hunter_model.pt");
+    globalBrain = new AICore("../assets/fighter_model.pt");
     // 2. SPAWN NPC (Pass the brain)
-    testEnemy = new NPC(100.0f, 100.0f, 50, 50, globalBrain);
+    testEnemy = new NPC(600, 0, globalBrain);
 }
 void Game::handleEvents() {
     SDL_Event event;
-    // Use a 'while' loop to catch ALL events, not just one
     while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-            case SDL_QUIT:
-                isRunning = false;
-                break;
-            default:
-                break;
-        }
+        if (event.type == SDL_QUIT) isRunning = false;
+    }
+
+    // KEYBOARD INPUT
+    const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+    if (player) {
+        player->handleInput(currentKeyStates);
     }
 }
 void Game::update() {
-    // Get Mouse State
-    int mouseX, mouseY;
-    SDL_GetMouseState(&mouseX, &mouseY);
+    // Update Player
+    if (player) player->update();
 
-    // Pass Mouse X to the NPC
-    if (testEnemy) {
-        testEnemy->update((float)mouseX);
+    // Update NPC
+    if (testEnemy && player) {
+        testEnemy->update(player);
     }
 }
 
@@ -56,9 +55,13 @@ void Game::render() {
     if (testEnemy) {
         testEnemy->render(renderer);
     }
+    // Draw the FLOOR (Visual reference)
+    SDL_Rect floorRect = { 0, 500, 800, 100}; // Assuming 800x600 window
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255); // Grey floor
+    SDL_RenderFillRect(renderer, &floorRect);
+    if (player) player->render(renderer);
 
     SDL_RenderPresent(renderer);
-
     // this line capsm framerate roughly around 60FPS (16ms per frame)
     SDL_Delay(16);
 }
