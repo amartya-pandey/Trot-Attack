@@ -5,10 +5,8 @@
 #include <SDL2/SDL.h>
 #include <torch/torch.h>
 #include <iostream>
-
-#ifndef GAVEN_GAME_H
-#define GAVEN_GAME_H
-
+#include "NPC.h"
+#include "AICore.h"
 
 class Game {
 public:
@@ -29,6 +27,6 @@ private:
     bool isRunning;
     SDL_Window* window;
     SDL_Renderer* renderer;
+    NPC* testEnemy;
+    AICore* globalBrain;
 };
-
-#endif //GAVEN_GAME_H

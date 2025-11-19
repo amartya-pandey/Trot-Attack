@@ -12,6 +12,14 @@ find_package(SDL2 REQUIRED CONFIG)
 
 
 add_executable(gaven src/main.cpp
+        src/Game.cpp
+        src/Game.h
+        src/Entity.cpp
+        src/Entity.h
+        src/NPC.cpp
+        src/NPC.h
+        src/AICore.cpp
+        src/AICore.h
 )
 
 # link libraries
