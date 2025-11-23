@@ -41,4 +41,8 @@ target_link_libraries(gaven
         SDL2::SDL2main
 )
 
-target_compile_options(gaven PRIVATE -Wall -Wextra)
+if(MSVC)
+    target_compile_options(gaven PRIVATE /W4)
+else()
+    target_compile_options(gaven PRIVATE -Wall -Wextra)
+endif()
