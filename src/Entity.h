@@ -3,8 +3,14 @@
 //
 
 #pragma once
-#include <SDL2/SDL.h>
-
+// #include <SDL2/SDL.h>
+#if __has_include(<SDL.h>)
+    #include <SDL.h>
+#elif __has_include(<SDL2/SDL.h>)
+    #include <SDL2/SDL.h>
+#else
+    #error "SDL header not found. Please check your include paths."
+#endif
 // New State: COOLDOWN means we just attacked and can't do it again yet
 enum EntityState { IDLE, RUN, JUMP, ATTACK, HIT, BLOCK };
 class Entity {

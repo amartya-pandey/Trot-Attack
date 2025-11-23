@@ -1,6 +1,13 @@
 #pragma once
-#include <SDL2/SDL.h>
-#include <vector> // Required for particles
+// #include <SDL2/SDL.h>
+#if __has_include(<SDL.h>)
+    #include <SDL.h>
+#elif __has_include(<SDL2/SDL.h>)
+    #include <SDL2/SDL.h>
+#else
+    #error "SDL header not found. Please check your include paths."
+#endif
+#include <vector>
 #include "Player.h"
 #include "NPC.h"
 #include "AICore.h"
