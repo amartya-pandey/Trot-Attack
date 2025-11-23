@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(Torch_DIR "/home/amartya/Development/libtorch/share/cmake/Torch/") # pytorch directory
+if(NOT DEFINED Torch_DIR)
+    # REPLACE THIS WITH YOUR LOCAL LINUX PATH
+    set(Torch_DIR "/home/archuser/Development/libtorch/share/cmake/Torch")
+endif()
 # external libraries
 find_package(Torch REQUIRED)
 
