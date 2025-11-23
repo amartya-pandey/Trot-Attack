@@ -8,7 +8,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(Torch_DIR "/home/amartya/Development/libtorch/share/cmake/Torch/") # pytorch directory
 # external libraries
 find_package(Torch REQUIRED)
-find_package(SDL2 REQUIRED CONFIG)
+
+if(WIN32)
+    set(SDL2_PATH "${CMAKE_SOURCE_DIR}/libs/SDL2")
+    find_package(SDL2 REQUIRED CONFIG)
+else()
+    find_package(SDL2 REQUIRED CONFIG)
+endif()
 
 
 add_executable(gaven src/main.cpp

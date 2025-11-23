@@ -1,0 +1,62 @@
+name: Build Windows Game
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v1.13
+
+      - name: Download LibTorch (Windows Release)
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-2.0.1%2Bcpu.zip" -OutFile "libtorch.zip"
+          Expand-Archive -Path "libtorch.zip" -DestinationPath "libs"
+          Rename-Item -Path "libs\libtorch" -NewName "Torch"
+
+      - name: Download SDL2 (Windows VC)
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/libsdl-org/SDL/releases/download/release-2.28.5/SDL2-devel-2.28.5-VC.zip" -OutFile "sdl2.zip"
+          Expand-Archive -Path "sdl2.zip" -DestinationPath "libs"
+          Move-Item -Path "libs\SDL2-2.28.5" -Destination "libs\SDL2"
+
+      - name: Create Build Directory
+        run: mkdir build
+
+      - name: Configure CMake
+        shell: cmd
+        # We manually point to where we downloaded the libs
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTorch_DIR="%GITHUB_WORKSPACE%/libs/Torch/share/cmake/Torch" -DSDL2_DIR="%GITHUB_WORKSPACE%/libs/SDL2/cmake"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Organize Artifacts (Create the Game Folder)
+        shell: powershell
+        run: |
+          mkdir Gaven_Windows
+          # Copy Executable
+          copy build\Release\gaven.exe Gaven_Windows\
+          # Copy DLLs (LibTorch)
+          copy libs\Torch\lib\*.dll Gaven_Windows\
+          # Copy DLLs (SDL2)
+          copy libs\SDL2\lib\x64\SDL2.dll Gaven_Windows\
+          # Copy Assets
+          copy -Recurse assets Gaven_Windows\assets
+
+      - name: Upload Game Zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: Gaven_Windows_Build
+          path: Gaven_Windows
