@@ -9,6 +9,8 @@
 
 class NPC : public Entity {
 public:
+    using Entity::update;
+
     NPC(float x, float y, AICore* brain);
 
     void update(Player* player);

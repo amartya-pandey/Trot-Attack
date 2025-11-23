@@ -1,6 +1,10 @@
 #include "Game.h"
 
 int main(int argc, char* argv[]) {
+    // Silence warnings
+    (void)argc;
+    (void)argv;
+
     Game* gaven = new Game();
 
     // Initialize the engine

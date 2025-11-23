@@ -51,7 +51,7 @@ Thumbs.db
 # ==============================================================================
 # Ignore large pre-trained models to prevent repo bloat
 # (Use Git LFS if you actually want to track these)
-*.pt
+#*.pt
 *.pth
 *.onnx
 *.t7

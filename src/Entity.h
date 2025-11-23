@@ -6,8 +6,7 @@
 #include <SDL2/SDL.h>
 
 // New State: COOLDOWN means we just attacked and can't do it again yet
-enum EntityState { IDLE, RUN, JUMP, ATTACK, HIT };
-
+enum EntityState { IDLE, RUN, JUMP, ATTACK, HIT, BLOCK };
 class Entity {
 public:
     Entity(float x, float y, int w, int h);
@@ -28,22 +27,23 @@ public:
     // Get the "Hurtbox" (The body)
     SDL_Rect getBounds();
 
-
     // Physics Properties
     float x, y;
     float velX, velY;
     int width, height;
     bool facingRight;
     bool onGround; // Is it touching the floor?
+
+    // Combat Stats
+    int maxHp;
+    int hp;
     EntityState state;
 
 protected:
     // Color (for rendering simple boxes)
     int r, g, b;
-
-    // Combat Stats
-    int hp;
-    int maxHp;
+    int baseR, baseG, baseB;
+    int hitTimer;
 
     // Timers
     int attackTimer;   // How long the hitbox stays out

@@ -1,34 +1,44 @@
-//
-// Created by amartya on 11/19/25.
-//
 #pragma once
 #include <SDL2/SDL.h>
-#include <torch/torch.h>
-#include <iostream>
+#include <vector> // Required for particles
+#include "Player.h"
 #include "NPC.h"
 #include "AICore.h"
-#include "Player.h"
+
+struct Particle {
+    float x, y;
+    float velX, velY;
+    int life;
+};
 
 class Game {
 public:
     Game();
     ~Game();
-
-    // Core Engine Functions
     void init(const char* title, int width, int height);
     void handleEvents();
     void update();
     void render();
     void clean();
-
-    // Is the game still running?
     bool running() { return isRunning; }
+
+    // Level Management
+    void loadLevel(int levelIndex);
 
 private:
     bool isRunning;
     SDL_Window* window;
     SDL_Renderer* renderer;
+
+    Player* player;
     NPC* testEnemy;
     AICore* globalBrain;
-    Player* player;
+
+    // Campaign State
+    int currentLevel;
+    bool levelComplete;
+    int victoryTimer;
+
+    // Visuals
+    std::vector<Particle> particles; // Blood particles
 };

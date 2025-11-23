@@ -6,24 +6,34 @@
 
 Player::Player(float x, float y) : Entity(x, y, 40, 80) {
     // Make the player Blue
-    r = 0; g = 0; b = 255;
+    baseR = 0; baseG = 0; baseB = 255;
 }
 
 void Player::handleInput(const Uint8* keystates) {
-    // Don't allow movement input while attacking
-    if (state == ATTACK) return;
+    if (state == ATTACK) return; // Can't block while swinging
 
     velX = 0;
-    if (keystates[SDL_SCANCODE_A]) velX = -5.0f;
-    if (keystates[SDL_SCANCODE_D]) velX = 5.0f;
+    state = IDLE; // Default
 
+    // MOVEMENT
+    if (keystates[SDL_SCANCODE_A]) { velX = -5.0f; state = RUN; }
+    if (keystates[SDL_SCANCODE_D]) { velX = 5.0f; state = RUN; }
+
+    // JUMP
     if (keystates[SDL_SCANCODE_SPACE] && onGround) {
         velY = -15.0f;
         onGround = false;
+        state = JUMP;
     }
 
-    // NEW: Press F to Attack
-    if (keystates[SDL_SCANCODE_F]) {
+    // BLOCK (Hold S)
+    if (keystates[SDL_SCANCODE_S] && onGround) {
+        state = BLOCK;
+        velX = 0; // Cannot move while blocking
+    }
+
+    // ATTACK (Press F) - Only if not blocking
+    if (keystates[SDL_SCANCODE_F] && state != BLOCK) {
         attack();
     }
 }
